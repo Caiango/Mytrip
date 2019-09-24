@@ -1,0 +1,80 @@
+<html>
+<head>
+<title>MainActivity.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.mytrip</span>
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+<span class="s2">//tem de importar android.view.View para o onclicklistener funcionar</span>
+<span class="s1">import android.view.View</span>
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.NumberFormatException
+
+<span class="s2">//Tem de colocar a View.OncliListener para chamar os elementos na Main</span>
+<span class="s0">class </span><span class="s1">MainActivity : AppCompatActivity()</span><span class="s0">, </span><span class="s1">View.OnClickListener {</span>
+
+    <span class="s2">//fazer o override para o onclicklistener funcionar</span>
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">onClick(view: View) {</span>
+        <span class="s2">//tem de criar a val id, para eu saber distinguir onde estarei aplicando o evento de click</span>
+        <span class="s0">val </span><span class="s1">id = view.id</span>
+        <span class="s2">//se o id for o id do botão, faça isso:</span>
+        <span class="s0">if </span><span class="s1">(id == R.id.botaoCalc) {</span>
+            Calcular()
+        }
+    }
+
+
+    override <span class="s0">fun </span><span class="s1">onCreate(savedInstanceState: Bundle?) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span>
+        setContentView(R.layout.activity_main)
+
+        botaoCalc.setOnClickListener(<span class="s0">this</span><span class="s1">)</span>
+
+    }
+
+    private <span class="s0">fun </span><span class="s1">Calcular() {</span>
+        <span class="s0">if </span><span class="s1">(isValid()) {</span>
+
+            <span class="s0">try </span><span class="s1">{</span>
+                <span class="s2">// (ditancia * preço) / autonomia</span>
+                <span class="s0">val </span><span class="s1">dist = editDist.text.toString().toFloat()</span>
+                <span class="s0">val </span><span class="s1">preco = ediPreco.text.toString().toFloat()</span>
+                <span class="s0">val </span><span class="s1">auto = editAuto.text.toString().toFloat()</span>
+                <span class="s0">val </span><span class="s1">resultado = ((dist * preco) / auto)</span>
+                textValor.setText(<span class="s3">&quot;Total R$: </span><span class="s0">$</span><span class="s1">resultado</span><span class="s3">&quot;</span><span class="s1">)</span>
+
+            } catch (nfe: NumberFormatException) {
+                Toast.makeText(<span class="s0">this, </span><span class="s1">getString(R.string.valor_valido)</span><span class="s0">, </span><span class="s1">Toast.LENGTH_LONG).show()</span>
+            }
+
+        } <span class="s0">else </span><span class="s1">{</span>
+            Toast.makeText(<span class="s0">this, </span><span class="s1">getString(R.string.valor_valido)</span><span class="s0">, </span><span class="s1">Toast.LENGTH_LONG).show()</span>
+        }
+
+    }
+
+    private <span class="s0">fun </span><span class="s1">isValid(): Boolean {</span>
+       <span class="s0">return </span><span class="s1">editDist.text.toString() != </span><span class="s3">&quot;&quot;</span>
+                <span class="s1">&amp;&amp; ediPreco.text.toString() != </span><span class="s3">&quot;&quot;</span>
+                <span class="s1">&amp;&amp; editAuto.text.toString() != </span><span class="s3">&quot;&quot;</span>
+                <span class="s1">&amp;&amp; editAuto.text.toString() != </span><span class="s3">&quot;0&quot;</span>
+    <span class="s1">}</span>
+
+}</pre>
+</body>
+</html>

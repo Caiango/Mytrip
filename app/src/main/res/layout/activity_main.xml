@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?><!--Linear Layout só aceita colocar elementos horizontlamente e verticalmente-->
+<!--Escolhi a colocar as coisas verticalmente usando o android:orientation -->
+<!--android:textColorHint é a cor que ficará na dica-->
+<!--Margin é a distancia que fica da margem-->
+<!--Background é como chamo o stylo criado para o edit, crio ele no drawble-->
+<!--Gravity defino onde o meu texto ficará localizado dentro do editview-->
+<!--Style, criei um stylo com todas essas funcionalidades explicadasa cima, porem não preciso escrever sempre, só chamar o stylo-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EBEBEB"
+
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/editDist"
+            style="@style/customedit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:hint="@string/distancia" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:text="Total de Kilometros"
+            android:textAllCaps="true"
+            android:textColor="@color/colorview"
+            android:textSize="10sp" />
+
+        <EditText
+            android:id="@+id/ediPreco"
+            style="@style/customedit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:hint="@string/preco" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:text="Preço da Gasolina"
+            android:textAllCaps="true"
+            android:textColor="@color/colorview"
+            android:textSize="10sp" />
+
+        <EditText
+            android:id="@+id/editAuto"
+            style="@style/customedit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:hint="@string/autonomia" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:text="KMS por litro"
+            android:textAllCaps="true"
+            android:textColor="@color/colorview"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:text="Seu gasto total será de:"
+            android:textAllCaps="true"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textValor"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:text="R$ 0,00"
+            android:textColor="#DF3829"
+            android:textSize="35sp" />
+
+        <Button
+            android:id="@+id/botaoCalc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@drawable/button_layout"
+            android:padding="15dp"
+            android:text="@string/calcular"
+            android:textColor="@color/colortext"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</ScrollView>
+
