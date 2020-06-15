@@ -12,30 +12,23 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import mumayank.com.airlocationlibrary.AirLocation
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     var airloc: AirLocation? = null
+    lateinit var floating: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-    }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        if (mMap!= null){
-
+        floating = findViewById(R.id.floatingActionButton)
+        floating.setOnClickListener {
             airloc = AirLocation(this, true, true,
-                object : AirLocation.Callbacks{
+                object : AirLocation.Callbacks {
                     override fun onFailed(locationFailedEnum: AirLocation.LocationFailedEnum) {
 
                         Toast.makeText(applicationContext, "ERRO", Toast.LENGTH_SHORT).show()
@@ -44,8 +37,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     override fun onSuccess(location: Location) {
 
                         val ll = LatLng(location.latitude, location.longitude)
-                        mMap.addMarker(MarkerOptions().position(ll).title("Marker in where you are"))
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll,16.0f))
+                        mMap.addMarker(
+                            MarkerOptions().position(ll).title("Marker in where you are")
+                        )
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 16.0f))
+                    }
+
+                })
+        }
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.fragment) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        if (mMap != null) {
+
+            airloc = AirLocation(this, true, true,
+                object : AirLocation.Callbacks {
+                    override fun onFailed(locationFailedEnum: AirLocation.LocationFailedEnum) {
+
+                        Toast.makeText(applicationContext, "ERRO", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onSuccess(location: Location) {
+
+                        val ll = LatLng(location.latitude, location.longitude)
+                        mMap.addMarker(
+                            MarkerOptions().position(ll).title("Marker in where you are")
+                        )
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 16.0f))
                     }
 
                 })
