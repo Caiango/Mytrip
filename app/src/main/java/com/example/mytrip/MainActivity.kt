@@ -1,5 +1,6 @@
 package com.example.mytrip
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 //tem de importar android.view.View para o onclicklistener funcionar
@@ -18,6 +19,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         //se o id for o id do botão, faça isso:
         if (id == R.id.botaoCalc) {
             Calcular()
+        }else if (id == R.id.botaoCalc2){
+            val intent = Intent(this, MapsActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -27,6 +31,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
 
         botaoCalc.setOnClickListener(this)
+        botaoCalc2.setOnClickListener(this)
 
     }
 
