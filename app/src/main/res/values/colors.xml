@@ -6,4 +6,5 @@
     <color name="colortext">#EBDEDE</color>
     <color name="colorhint">#C2BDBD</color>
     <color name="colorview">#845BC9</color>
+    <color name="colorBackMap">#EFE5FF</color>
 </resources>

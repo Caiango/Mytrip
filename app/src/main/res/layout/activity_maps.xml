@@ -5,23 +5,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EBEBEB">
+    android:background="@color/colorBackMap">
 
+
+    <ImageButton
+        android:id="@+id/imageButtonGo"
+        android:layout_width="54dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/colorBackMap"
+        android:tint="@color/colorview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_search" />
 
     <EditText
         android:id="@+id/address"
-        android:layout_width="378dp"
-        android:layout_height="48dp"
+        android:textColorHint="@color/colorPrimary"
+        android:layout_width="314dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="12dp"
         android:hint="Informe o Destino"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.268"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/find_destination"
+        android:id="@+id/calc_dist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_layout"
         android:text="Calcular"
+        android:textColor="@color/colortext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +52,7 @@
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        app:backgroundTint="@color/colorview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_menu_myplaces" />
@@ -43,10 +62,10 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="409dp"
         android:layout_height="601dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

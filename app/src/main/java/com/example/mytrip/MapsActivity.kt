@@ -6,8 +6,10 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Layout
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -17,6 +19,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.maps.DirectionsApi
+import com.google.maps.GeoApiContext
+import com.google.maps.model.DirectionsResult
+import com.google.maps.model.TravelMode
 import mumayank.com.airlocationlibrary.AirLocation
 import java.util.*
 
@@ -25,16 +31,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     var airloc: AirLocation? = null
     lateinit var floating: FloatingActionButton
-    lateinit var destination: Button
+    lateinit var imgbutgo: ImageButton
+    lateinit var calcDist: Button
     lateinit var typedAddres: EditText
+    val loc1 = Location("")
+    val loc2 = Location("")
+    var dist = ""
+    lateinit var position: String
+    var destino: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
         typedAddres = findViewById(R.id.address)
-        destination = findViewById(R.id.find_destination)
+        imgbutgo = findViewById(R.id.imageButtonGo)
         floating = findViewById(R.id.floatingActionButton)
+        calcDist = findViewById(R.id.calc_dist)
 
         //função de click para mostrar minha posição
         floating.setOnClickListener {
@@ -60,21 +73,45 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         //função de click para mostrar destino
-        destination.setOnClickListener {
+        imgbutgo.setOnClickListener {
             //pego texto do edittext
-            val Address = typedAddres.text.toString().trim()
+            if (typedAddres.text.isNotEmpty()) {
+                val Address = typedAddres.text.toString().trim()
+                destino = typedAddres.text.toString().trim()
 
-            //chamo funções Lat e Lng com o texto do edittext e retorno a Lat e Lng para duas variáveis
-            val addressLat = getAddressNameLat(Address)
-            val addressLng = getAddressNameLng(Address)
+                //chamo funções Lat e Lng com o texto do edittext e retorno a Lat e Lng para duas variáveis
+                val addressLat = getAddressNameLat(Address)
+                val addressLng = getAddressNameLng(Address)
 
-            //mostro no mapa com animação meu destino
-            val destino = LatLng(addressLat.toDouble(), addressLng.toDouble())
-            mMap.addMarker(
-                MarkerOptions().position(destino).title("Seu destino")
-            )
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destino, 16.0f))
+
+                loc2.latitude = addressLat.toDouble()
+                loc2.longitude = addressLng.toDouble()
+
+
+                //mostro no mapa com animação meu destino
+                val destino = LatLng(addressLat.toDouble(), addressLng.toDouble())
+                mMap.addMarker(
+                    MarkerOptions().position(destino).title("Seu destino")
+                )
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destino, 13.0f))
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    "Por favor informe um Destino",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
+
+        calcDist.setOnClickListener {
+            if (destino.isNotEmpty()) {
+                calcDistance()
+                Toast.makeText(applicationContext, dist, Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(applicationContext, "Por favor procure por seu destino", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 
         //código responsável por mostrar o mapa no fragment
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -99,15 +136,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     override fun onSuccess(location: Location) {
 
                         val ll = LatLng(location.latitude, location.longitude)
+
+                        position = getAddressLatLng(location.latitude, location.longitude)
+
                         mMap.addMarker(
                             MarkerOptions().position(ll).title("Sua Posição")
                         )
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll, 16.0f))
 
+                        loc1.latitude = location.latitude
+                        loc1.longitude = location.longitude
+
+
                     }
 
                 })
         }
+
 
     }
 
@@ -159,4 +204,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return adress[0].longitude.toString()
     }
 
+    //função que utiliza a DirectionsAPI para calcular distancia
+    fun calcDistance() {
+
+        val apiRequest = DirectionsApi.newRequest(getGeoContext())
+        apiRequest.origin(position)
+        apiRequest.destination(destino)
+        apiRequest.mode(TravelMode.DRIVING)
+        apiRequest.setCallback(object : com.google.maps.PendingResult.Callback<DirectionsResult> {
+            override fun onResult(result: DirectionsResult?) {
+                val routes = result!!.routes
+                dist = routes[0].legs[0].distance.toString().trim()
+            }
+
+            override fun onFailure(e: Throwable?) {
+                Log.e("Erro", e.toString())
+            }
+        })
+
+    }
+
+    //função autenticadora para utilizar o DirectionAPI
+    fun getGeoContext(): GeoApiContext {
+        val geoApiContext =
+            GeoApiContext.Builder().apiKey("AIzaSyCKEM68jXakrWtvUcv9D1kNW9SVTLeegYs").build()
+        return geoApiContext
+    }
 }
