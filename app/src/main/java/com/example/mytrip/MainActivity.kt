@@ -3,11 +3,13 @@ package com.example.mytrip
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 //tem de importar android.view.View para o onclicklistener funcionar
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.NumberFormatException
+import java.text.DecimalFormat
 
 //Tem de colocar a View.OncliListener para chamar os elementos na Main
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -35,6 +37,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    override fun onResume() {
+        getDist()
+        super.onResume()
+    }
+
     private fun Calcular() {
         if (isValid()) {
 
@@ -44,7 +51,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val preco = ediPreco.text.toString().toFloat()
                 val auto = editAuto.text.toString().toFloat()
                 val resultado = ((dist * preco) / auto)
-                textValor.setText("Total R$: $resultado")
+                val df = DecimalFormat("0.00")
+                val str = df.format(resultado)
+                textValor.setText("Total R$: $str")
 
             } catch (nfe: NumberFormatException) {
                 Toast.makeText(this, getString(R.string.valor_valido), Toast.LENGTH_LONG).show()
@@ -61,6 +70,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 && ediPreco.text.toString() != ""
                 && editAuto.text.toString() != ""
                 && editAuto.text.toString() != "0"
+    }
+
+    fun getDist(){
+        editDist.text = Editable.Factory.getInstance().newEditable(MapsActivity.dist)
     }
 
 }

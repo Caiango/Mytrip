@@ -1,5 +1,6 @@
 package com.example.mytrip
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
@@ -19,12 +20,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.internal.ContextUtils.getActivity
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.model.DirectionsResult
 import com.google.maps.model.TravelMode
 import mumayank.com.airlocationlibrary.AirLocation
-import java.util.*
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -33,21 +35,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var floating: FloatingActionButton
     lateinit var imgbutgo: ImageButton
     lateinit var calcDist: Button
+    lateinit var backbut: Button
     lateinit var typedAddres: EditText
+
     val loc1 = Location("")
     val loc2 = Location("")
-    var dist = ""
-    lateinit var position: String
+
+    lateinit var myposition: String
     var destino: String = ""
+
+    companion object {
+        var dist = ""
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+
+
         typedAddres = findViewById(R.id.address)
         imgbutgo = findViewById(R.id.imageButtonGo)
         floating = findViewById(R.id.floatingActionButton)
         calcDist = findViewById(R.id.calc_dist)
+        backbut = findViewById(R.id.button_back)
 
         //função de click para mostrar minha posição
         floating.setOnClickListener {
@@ -105,11 +117,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         calcDist.setOnClickListener {
             if (destino.isNotEmpty()) {
+
                 calcDistance()
-                Toast.makeText(applicationContext, dist, Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(applicationContext, "Por favor procure por seu destino", Toast.LENGTH_SHORT).show()
+                callFrag()
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    "Por favor procure por seu destino",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+        }
+
+        backbut.setOnClickListener {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
         }
 
 
@@ -137,7 +159,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         val ll = LatLng(location.latitude, location.longitude)
 
-                        position = getAddressLatLng(location.latitude, location.longitude)
+                        myposition = getAddressLatLng(location.latitude, location.longitude)
 
                         mMap.addMarker(
                             MarkerOptions().position(ll).title("Sua Posição")
@@ -206,22 +228,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     //função que utiliza a DirectionsAPI para calcular distancia
     fun calcDistance() {
-
         val apiRequest = DirectionsApi.newRequest(getGeoContext())
-        apiRequest.origin(position)
+        apiRequest.origin(myposition)
         apiRequest.destination(destino)
         apiRequest.mode(TravelMode.DRIVING)
         apiRequest.setCallback(object : com.google.maps.PendingResult.Callback<DirectionsResult> {
             override fun onResult(result: DirectionsResult?) {
+
                 val routes = result!!.routes
                 dist = routes[0].legs[0].distance.toString().trim()
+                val mainpart = dist.split(" ", "km")
+                dist = mainpart[0]
+
             }
 
             override fun onFailure(e: Throwable?) {
                 Log.e("Erro", e.toString())
             }
-        })
 
+        })
     }
 
     //função autenticadora para utilizar o DirectionAPI
@@ -229,5 +254,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val geoApiContext =
             GeoApiContext.Builder().apiKey("AIzaSyCKEM68jXakrWtvUcv9D1kNW9SVTLeegYs").build()
         return geoApiContext
+    }
+
+    fun callFrag() {
+        var a = supportFragmentManager.beginTransaction()
+        var b = TransitionFragment()
+        a.replace(R.id.maps_lay, b)
+        a.commit()
     }
 }
