@@ -17,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -103,7 +104,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 //mostro no mapa com animação meu destino
                 val destino = LatLng(addressLat.toDouble(), addressLng.toDouble())
                 mMap.addMarker(
-                    MarkerOptions().position(destino).title("Seu destino")
+                    MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                        .position(destino).title("Seu destino")
                 )
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destino, 13.0f))
             } else {
@@ -262,4 +264,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         a.replace(R.id.maps_lay, b)
         a.commit()
     }
+
+
 }
