@@ -1,12 +1,16 @@
 package com.example.mytrip
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 //tem de importar android.view.View para o onclicklistener funcionar
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.NumberFormatException
 import java.text.DecimalFormat
@@ -21,6 +25,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         //se o id for o id do botão, faça isso:
         if (id == R.id.botaoCalc) {
             Calcular()
+            hideKeyboard()
         }else if (id == R.id.botaoCalc2){
             val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
@@ -74,6 +79,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     fun getDist(){
         editDist.text = Editable.Factory.getInstance().newEditable(MapsActivity.dist)
+    }
+
+    //Três funções para esconder o teclado
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

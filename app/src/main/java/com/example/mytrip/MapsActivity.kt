@@ -1,6 +1,8 @@
 package com.example.mytrip
 
+import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
@@ -8,10 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Layout
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -27,6 +32,9 @@ import com.google.maps.GeoApiContext
 import com.google.maps.model.DirectionsResult
 import com.google.maps.model.TravelMode
 import mumayank.com.airlocationlibrary.AirLocation
+import java.lang.Exception
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -38,6 +46,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var calcDist: Button
     lateinit var backbut: Button
     lateinit var typedAddres: EditText
+    lateinit var teste: String
 
     val loc1 = Location("")
     val loc2 = Location("")
@@ -54,6 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+//        URL("www.google.com").readText()
 
 
         typedAddres = findViewById(R.id.address)
@@ -75,7 +85,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         val ll = LatLng(location.latitude, location.longitude)
                         mMap.addMarker(
-                            MarkerOptions().position(ll).title("Marker in where you are")
+                            MarkerOptions().position(ll).title("Sua Posição")
                         )
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll, 16.0f))
 
@@ -87,32 +97,46 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //função de click para mostrar destino
         imgbutgo.setOnClickListener {
-            //pego texto do edittext
-            if (typedAddres.text.isNotEmpty()) {
-                val Address = typedAddres.text.toString().trim()
-                destino = typedAddres.text.toString().trim()
+            try {
+                //pego texto do edittext
+                if (typedAddres.text.isNotEmpty()) {
+                    val Address = typedAddres.text.toString().trim()
+                    destino = typedAddres.text.toString().trim()
 
-                //chamo funções Lat e Lng com o texto do edittext e retorno a Lat e Lng para duas variáveis
-                val addressLat = getAddressNameLat(Address)
-                val addressLng = getAddressNameLng(Address)
-
-
-                loc2.latitude = addressLat.toDouble()
-                loc2.longitude = addressLng.toDouble()
+                    //chamo funções Lat e Lng com o texto do edittext e retorno a Lat e Lng para duas variáveis
+                    val addressLat = getAddressNameLat(Address)
+                    val addressLng = getAddressNameLng(Address)
 
 
-                //mostro no mapa com animação meu destino
-                val destino = LatLng(addressLat.toDouble(), addressLng.toDouble())
-                mMap.addMarker(
-                    MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                        .position(destino).title("Seu destino")
-                )
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destino, 13.0f))
-            } else {
+                    loc2.latitude = addressLat.toDouble()
+                    loc2.longitude = addressLng.toDouble()
+
+
+                    //mostro no mapa com animação meu destino
+                    val destino = LatLng(addressLat.toDouble(), addressLng.toDouble())
+                    mMap.addMarker(
+                        MarkerOptions().icon(
+                            BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_ORANGE
+                            )
+                        )
+                            .position(destino).title("Seu destino")
+                    )
+                    Toast.makeText(applicationContext, "CLIQUE NO MARCADOR DE DESTINO PARA VISUALIZAR SUA ROTA",Toast.LENGTH_LONG).show()
+                    hideKeyboard()
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destino, 13.0f))
+                } else {
+                    Toast.makeText(
+                        applicationContext,
+                        "Por favor informe um Destino",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
                 Toast.makeText(
                     applicationContext,
-                    "Por favor informe um Destino",
-                    Toast.LENGTH_LONG
+                    "Por favor seja mais preciso",
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -239,8 +263,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 val routes = result!!.routes
                 dist = routes[0].legs[0].distance.toString().trim()
-                val mainpart = dist.split(" ", "km")
-                dist = mainpart[0]
+                if (dist.isNullOrBlank()) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Por favor insira o Estado",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                val mainpart = dist.split(" ", "km", ",")
+                val a = mainpart[0]
+                val b = mainpart[1]
+                dist = a+b
 
             }
 
@@ -263,6 +296,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         var b = TransitionFragment()
         a.replace(R.id.maps_lay, b)
         a.commit()
+    }
+
+    //Três funções para esconder o teclado
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 
