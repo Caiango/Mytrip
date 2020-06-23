@@ -3,11 +3,11 @@
 <!--dentro do stroke defino o tamanho e a cor da borda-->
 <!--Em corners definimos o angulo da borda-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="10dp"
+    android:padding="1dp"
     android:shape="rectangle">
     <solid android:color="@color/colorBackMap" />
     <stroke
-        android:width="2dp"
+        android:width="0dp"
         android:color="@color/colorPrimary" />
     <corners
         android:bottomLeftRadius="6dp"

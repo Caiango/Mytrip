@@ -3,91 +3,129 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/maps_lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/maps_lay"
     android:background="@color/colorBackMap">
 
 
-    <ImageButton
-        android:id="@+id/imageButtonGo"
-        android:layout_width="54dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="10dp"
-        android:background="@color/colorBackMap"
-        android:tint="@color/colorview"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@drawable/view_back"
+        android:backgroundTint="#28845BC9"
+        android:padding="5dp"
+        android:translationZ="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_search" />
-
-    <EditText
-        android:id="@+id/address"
-        android:layout_width="314dp"
-        android:layout_height="46dp"
-        android:hint="Informe o Destino"
-        android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.268"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/imageButtonGo"
+            android:layout_width="55dp"
+            android:layout_height="53dp"
+            android:layout_marginEnd="10dp"
+            android:background="#00845BC9"
+            android:tint="@color/colorview"
+            android:translationZ="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_search" />
+
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="314dp"
+            android:layout_height="46dp"
+            android:hint="Informe o Destino"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:translationZ="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.268"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewHint"
+            android:layout_width="311dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="24dp"
+            android:text="Ex: Cidade, Estado/ Rua, Estado"
+            android:textColor="@color/colorPrimary"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/address" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <Button
         android:id="@+id/button_back"
-        android:layout_width="83dp"
+        android:layout_width="100dp"
         android:layout_height="37dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="2dp"
         android:background="@drawable/button_layout"
         android:text="Voltar"
         android:textColor="@color/colortext"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <Button
         android:id="@+id/calc_dist"
-        android:layout_width="125dp"
+        android:layout_width="100dp"
         android:layout_height="37dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginTop="2dp"
         android:background="@drawable/button_layout"
         android:text="Calcular DISTÂNCIA"
         android:textColor="@color/colortext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address" />
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="5dp"
         android:clickable="true"
         app:backgroundTint="@color/colorview"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton2"
+        app:layout_constraintStart_toStartOf="@+id/floatingActionButton2"
         app:srcCompat="@android:drawable/ic_menu_myplaces" />
 
     <fragment
         android:id="@+id/fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="409dp"
-        android:layout_height="601dp"
-        android:layout_marginBottom="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewHint"
-        android:layout_width="311dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="24dp"
-        android:textSize="10sp"
-        android:text="Ex: Cidade, Estado/ Rua, Estado"
-        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        app:backgroundTint="@color/colorview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_help" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50121653" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
