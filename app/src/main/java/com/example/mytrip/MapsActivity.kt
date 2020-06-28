@@ -1,14 +1,12 @@
 package com.example.mytrip
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -17,7 +15,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -26,15 +23,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.internal.ContextUtils.getActivity
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.model.DirectionsResult
 import com.google.maps.model.TravelMode
 import mumayank.com.airlocationlibrary.AirLocation
 import java.lang.Exception
-import java.net.HttpURLConnection
-import java.net.URL
+
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -42,11 +37,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     var airloc: AirLocation? = null
     lateinit var floating: FloatingActionButton
+    lateinit var floatHelp: FloatingActionButton
     lateinit var imgbutgo: ImageButton
     lateinit var calcDist: Button
     lateinit var backbut: Button
     lateinit var typedAddres: EditText
-    lateinit var teste: String
 
     val loc1 = Location("")
     val loc2 = Location("")
@@ -59,18 +54,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+    override fun onResume() {
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.fragment) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        super.onResume()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-
-//        URL("www.google.com").readText()
-
 
         typedAddres = findViewById(R.id.address)
         imgbutgo = findViewById(R.id.imageButtonGo)
         floating = findViewById(R.id.floatingActionButton)
         calcDist = findViewById(R.id.calc_dist)
         backbut = findViewById(R.id.button_back)
+        floatHelp = findViewById(R.id.floatingActionButton2)
 
         //função de click para mostrar minha posição
         floating.setOnClickListener {
@@ -122,7 +122,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         )
                             .position(destino).title("Seu destino")
                     )
-                    Toast.makeText(applicationContext, "CLIQUE NO MARCADOR DE DESTINO PARA VISUALIZAR SUA ROTA",Toast.LENGTH_LONG).show()
                     hideKeyboard()
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destino, 13.0f))
                 } else {
@@ -160,6 +159,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(intent)
         }
 
+        floatHelp.setOnClickListener { callHelp() }
+
 
         //código responsável por mostrar o mapa no fragment
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -168,6 +169,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
     }
+
+
 
     //função responsável por pegar meu LatLng atual e marcar no mapa com animação onde estou
     override fun onMapReady(googleMap: GoogleMap) {
@@ -312,5 +315,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    fun callHelp(){
+        var a = supportFragmentManager.beginTransaction()
+        var b = HelpFragment()
+        a.replace(R.id.maps_lay, b)
+        a.commit()
+    }
 
 }
