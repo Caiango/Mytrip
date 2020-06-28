@@ -3,6 +3,7 @@ package com.example.mytrip
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +32,6 @@ import mumayank.com.airlocationlibrary.AirLocation
 import java.lang.Exception
 
 
-
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
@@ -53,13 +53,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         var dist = ""
     }
 
-
-    override fun onResume() {
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.fragment) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        super.onResume()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -171,7 +164,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-
     //função responsável por pegar meu LatLng atual e marcar no mapa com animação onde estou
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -276,7 +268,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val mainpart = dist.split(" ", "km", ",")
                 val a = mainpart[0]
                 val b = mainpart[1]
-                dist = a+b
+                dist = a + b
 
             }
 
@@ -311,11 +303,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun Context.hideKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun callHelp(){
+    fun callHelp() {
         var a = supportFragmentManager.beginTransaction()
         var b = HelpFragment()
         a.replace(R.id.maps_lay, b)

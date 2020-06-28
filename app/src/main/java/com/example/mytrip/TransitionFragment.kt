@@ -27,7 +27,9 @@ class TransitionFragment : Fragment() {
             startActivity(intent)
         }
         butno.setOnClickListener {
-            getActivity()?.getSupportFragmentManager()?.beginTransaction()?.remove(this)?.commit()
+            //getActivity()?.getSupportFragmentManager()?.beginTransaction()?.remove(this)?.commit()
+            val intent = Intent(context, MapsActivity::class.java)
+            startActivity(intent)
         }
         return root
 
