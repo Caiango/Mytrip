@@ -9,6 +9,7 @@ import android.text.Editable
 //tem de importar android.view.View para o onclicklistener funcionar
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Switch
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,6 +19,9 @@ import java.text.DecimalFormat
 //Tem de colocar a View.OncliListener para chamar os elementos na Main
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
+    lateinit var switch: Switch
+    var resultado: Float = 0f
+
     //fazer o override para o onclicklistener funcionar
     override fun onClick(view: View) {
         //tem de criar a val id, para eu saber distinguir onde estarei aplicando o evento de click
@@ -26,7 +30,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (id == R.id.botaoCalc) {
             Calcular()
             hideKeyboard()
-        }else if (id == R.id.botaoCalc2){
+        } else if (id == R.id.botaoCalc2) {
             val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
@@ -36,6 +40,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        switch = findViewById(R.id.switch1)
 
         botaoCalc.setOnClickListener(this)
         botaoCalc2.setOnClickListener(this)
@@ -55,7 +61,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val dist = editDist.text.toString().toFloat()
                 val preco = ediPreco.text.toString().toFloat()
                 val auto = editAuto.text.toString().toFloat()
-                val resultado = ((dist * preco) / auto)
+                if (switch.isChecked) {
+                    resultado = (((dist * preco) / auto) * 2)
+
+                } else {
+                    resultado = ((dist * preco) / auto)
+                }
+
                 val df = DecimalFormat("0.00")
                 val str = df.format(resultado)
                 textValor.setText("Total R$: $str")
@@ -71,13 +83,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun isValid(): Boolean {
-       return editDist.text.toString() != ""
+        return editDist.text.toString() != ""
                 && ediPreco.text.toString() != ""
                 && editAuto.text.toString() != ""
                 && editAuto.text.toString() != "0"
     }
 
-    fun getDist(){
+    fun getDist() {
         editDist.text = Editable.Factory.getInstance().newEditable(MapsActivity.dist)
     }
 
@@ -91,7 +103,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun Context.hideKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
