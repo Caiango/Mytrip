@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.activity_maps.*
@@ -23,8 +25,10 @@ class HelpFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_help, container, false)
         val buthelp: Button = root.findViewById(R.id.buttonHelp)
         buthelp.setOnClickListener {
-            val intent = Intent(context, MapsActivity::class.java)
-            startActivity(intent)
+
+            //getFragmentManager()?.beginTransaction()?.remove(this)?.commitAllowingStateLoss()
+
+
         }
         return root
     }

@@ -37,4 +37,10 @@ dependencies {
     implementation 'com.github.mumayank:AirLocation:1.2'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.google.maps:google-maps-services:0.2.11'
+    implementation 'com.airbnb.android:lottie:3.6.1'
+
+    //anko
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko-design:$anko_version"
+    implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
 }

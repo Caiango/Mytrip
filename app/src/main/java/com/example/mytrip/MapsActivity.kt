@@ -1,9 +1,11 @@
 package com.example.mytrip
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +30,9 @@ import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.model.DirectionsResult
 import com.google.maps.model.TravelMode
+import kotlinx.coroutines.NonCancellable.cancel
 import mumayank.com.airlocationlibrary.AirLocation
+import org.jetbrains.anko.indeterminateProgressDialog
 import java.lang.Exception
 
 
@@ -137,7 +141,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (destino.isNotEmpty()) {
 
                 calcDistance()
-                callFrag()
+
             } else {
                 Toast.makeText(
                     applicationContext,
@@ -152,7 +156,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(intent)
         }
 
-        floatHelp.setOnClickListener { callHelp() }
+        floatHelp.setOnClickListener { callDialog() }
 
 
         //código responsável por mostrar o mapa no fragment
@@ -249,6 +253,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     //função que utiliza a DirectionsAPI para calcular distancia
     fun calcDistance() {
+        val progressDialog = indeterminateProgressDialog("Calculando a distância")
         val apiRequest = DirectionsApi.newRequest(getGeoContext())
         apiRequest.origin(myposition)
         apiRequest.destination(destino)
@@ -258,7 +263,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 val routes = result!!.routes
                 dist = routes[0].legs[0].distance.toString().trim()
-                if (dist.isNullOrBlank()) {
+                if (dist.isBlank()) {
                     Toast.makeText(
                         applicationContext,
                         "Por favor insira o Estado",
@@ -269,6 +274,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val a = mainpart[0]
                 val b = mainpart[1]
                 dist = a + b
+                progressDialog.dismiss()
+                callMain()
 
             }
 
@@ -277,6 +284,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
+
     }
 
     //função autenticadora para utilizar o DirectionAPI
@@ -286,16 +294,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return geoApiContext
     }
 
-    fun callFrag() {
-        var a = supportFragmentManager.beginTransaction()
-        var b = TransitionFragment()
-        a.replace(R.id.maps_lay, b)
-        a.commit()
-    }
-
-    //Três funções para esconder o teclado
-    fun Fragment.hideKeyboard() {
-        view?.let { activity?.hideKeyboard(it) }
+    fun callMain() {
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(intent)
     }
 
     fun Activity.hideKeyboard() {
@@ -308,11 +309,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun callHelp() {
-        var a = supportFragmentManager.beginTransaction()
-        var b = HelpFragment()
-        a.replace(R.id.maps_lay, b)
-        a.commit()
+    private fun callDialog() {
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        dialog.setTitle("AJUDA")
+        dialog.setMessage(
+            "- CLIQUE NO MARCADOR DE DESTINO (LARANJA) PARA VISUALIZAR SUA ROTA" + "\n" +
+                    "- POR FAVOR SEJA O MAIS PRECISO POSSÍVEL, PARA ISSO INSIRA AO MENOS O NOME DO ESTADO OU CIDADE" + "\n" +
+                    "- ATIVE SUA LOCALIZAÇÃO E INTERNET PARA USO DO APLICATIVO"
+        )
+        dialog.setPositiveButton("OK") { _: DialogInterface, _: Int ->
+
+        }
+
+        dialog.show()
+
     }
+
+    //    fun callHelp() {
+    //        var a = supportFragmentManager.beginTransaction()
+    //        var b = HelpFragment()
+    //        a.replace(R.id.maps_lay, b)
+    //        a.commit()
+    //    }
 
 }
